@@ -66,14 +66,17 @@ selected_genre = st.sidebar.multiselect('Genre', genre_list)
 
 
 # display  top movie as hero banner
-st.title(movies[0]['title'])
-st.markdown('**Popularity:** ' + str(movies[0]['popularity']))
-st.markdown('**Vote Average:** ' + str(movies[0]['vote_average']))
-st.markdown('**Release Date:** ' + str(movies[0]['release_date']))
-st.markdown('**Overview:** ' + str(movies[0]['overview']))
-st.image('https://image.tmdb.org/t/p/w500' + movies[0]['poster_path'])
 
-# filter movies by selected genre
+# st.write("Trending Movie ")
+# st.title(movies[0]['title'])
+# st.markdown('**Popularity:** ' + str(movies[0]['popularity']))
+# st.markdown('**Vote Average:** ' + str(movies[0]['vote_average']))
+# st.markdown('**Release Date:** ' + str(movies[0]['release_date']))
+# st.markdown('**Overview:** ' + str(movies[0]['overview']))
+# st.image('https://image.tmdb.org/t/p/w500' + movies[0]['poster_path'])
+
+# filter movies by selected genre in one line 
+@st.cache
 def filter_movies(movies, genres):
         filtered_movies = []
         for movie in movies:
@@ -85,33 +88,28 @@ def filter_movies(movies, genres):
                         filtered_movies.append(movie)
         return filtered_movies
 
-# display movies with image, title and genre as small cards
+
+data_load_state = st.text('Loading data...')
+
+
+# display movies with image, title and genre as small cards in one line
 if selected_genre:
-        movies = filter_movies(movies, selected_genre)
+    movies = filter_movies(movies, selected_genre)
 for movie in movies:
-        col1, col2, col3 = st.columns(3)
-        with col1:
-                st.write(movie['title'])
-                st.image('https://image.tmdb.org/t/p/w500' + movie['poster_path'])
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.write(movie['title'])
+        st.image('https://image.tmdb.org/t/p/w500' +
+                         movie['poster_path'])
+
        
                 
         with col2:
-                movie_genre_ids = movie['genre_ids']
-                movie_genres = []
-                for genre_id in movie_genre_ids:
-                        movie_genres.append(genres_dict[genre_id])
-                st.write(movie_genres)
-                
-# # display movie details on click assign a unique key to each movie card
-#         if st.button(movie['title'], key=movie['id']):
-#                 st.write(movie['overview'])
-#                 st.write(movie['release_date'])
-#                 st.write(movie['vote_average'])
-#                 st.write(movie['vote_count'])
-#                 st.write(movie['popularity'])
-#                 st.write(movie['original_language'])
+               st.write(movie['overview'])
 
 # display movie trailers on button click
+
+
         if st.button('Trailer', key=movie['id']):
                 trailer_response = requests.get('https://api.themoviedb.org/3/movie/' + str(movie['id']) + '/videos?api_key=d9604e1674b0955abd840336ad75a8e5&language=en-US')
                 trailer = trailer_response.json()['results'][0]
@@ -121,19 +119,20 @@ for movie in movies:
 
 
 
+
 # dislay movie per genre
-for genre in selected_genre:
-        st.write(genre)
-        for movie in movies:
-                movie_genre_ids = movie['genre_ids']
-                movie_genres = []
-                for genre_id in movie_genre_ids:
-                        movie_genres.append(genres_dict[genre_id])
-                if genre in movie_genres:
-                        st.write(movie['title'])
-                        st.image('https://image.tmdb.org/t/p/w500' + movie['poster_path'])
-                        st.write(movie['overview'])
-                        st.write(movie['release_date'])
+# for genre in selected_genre:
+#         st.write(genre)
+#         for movie in movies:
+#                 movie_genre_ids = movie['genre_ids']
+#                 movie_genres = []
+#                 for genre_id in movie_genre_ids:
+#                         movie_genres.append(genres_dict[genre_id])
+#                 if genre in movie_genres:
+#                         st.write(movie['title'])
+#                         st.image('https://image.tmdb.org/t/p/w500' + movie['poster_path'])
+#                         st.write(movie['overview'])
+#                         st.write(movie['release_date'])
 
 
 
